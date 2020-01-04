@@ -994,6 +994,7 @@ function planner_controller($scope){
 			self.seasons = data.seasons;
 			self.stages = data.stages;
 			self.regrow = data.regrow;
+			self.growfix = data.growfix;
 			if (data.wild) self.wild = true;
 			
 			// Harvest data
@@ -1456,6 +1457,7 @@ function planner_controller($scope){
 					if (growfix[3]!=null) remove_days -= growfix[3];
 					break;
 			}
+
 			
 			// For removing more than one day from larger stages of growth
 			// when there are still days to remove
