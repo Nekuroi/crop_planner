@@ -960,6 +960,9 @@ function planner_controller($scope){
 		self.regrow;
 		self.wild = false;
 		
+		// For fixing miscalculated data due to a game bug
+		self.growfix = [];
+		
 		// Harvest data
 		self.harvest = {
 			min: 1,
@@ -1417,7 +1420,7 @@ function planner_controller($scope){
 	
 	Plan.prototype.get_grow_time = function(){
 		var stages = $.extend([], this.crop.stages);
-		
+				
 		if (this.fertilizer.id == "speed_gro" || this.fertilizer.id == "delux_speed_gro" || planner.player.agriculturist){
 			// [SOURCE: StardewValley.TerrainFeatures/HoeDirt.cs : function plant]
 			var rate = 0;
@@ -1435,6 +1438,24 @@ function planner_controller($scope){
 			
 			// Days to remove
 			var remove_days = Math.ceil(this.crop.grow * rate);
+			
+			// Correct grow times 
+			var growfix = $.extend([], this.crop.growfix);
+			var growrate = rate * 100;
+       			switch(growrate){
+				case 10:
+					if (growfix[0]!=null) remove_days -= growfix[0];
+					break;
+				case 20:
+					if (growfix[1]!=null) remove_days -= growfix[1];
+					break;
+				case 25:
+					if (growfix[2]!=null) remove_days -= growfix[2];
+					break;
+				case 35:
+					if (growfix[3]!=null) remove_days -= growfix[3];
+					break;
+			}
 			
 			// For removing more than one day from larger stages of growth
 			// when there are still days to remove
